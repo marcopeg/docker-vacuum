@@ -22,7 +22,24 @@ const features = [
 registerAction({
     hook: SETTINGS,
     name: '♦ boot',
-    handler: async ({ settings }) => {},
+    handler: async ({ settings }) => {
+        settings.vacuum = {
+            rules: [
+                {
+                    match: 'registry.24hr(.*)',
+                    retain: 1,
+                },
+                {
+                    match: 'mariadb',
+                    retain: 1,
+                },
+                {
+                    match: 'marcopeg/gatsby-deploy',
+                    retain: 2,
+                }
+            ]
+        }
+    },
 })
 
 registerAction({

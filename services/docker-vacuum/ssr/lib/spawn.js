@@ -8,18 +8,19 @@ export const spawn = (cmd, options = {}) =>
         
         const process = spawnCmd(tokens.shift(), tokens, otherOptions)
 
-        process.stdout.on('data', data => {
-            log(data.toString().trim())
-        })
+        if (log) {
+            process.stdout.on('data', data => {
+                log(data.toString().trim())
+            })
+        }
         
         process.stderr.on('data', data => {
             lastErrorMsg = data.toString().trim()
         })
 
         process.on('close', code => {
-            log('done', code)
             if (code === 0) {
-                resolve()
+                resolve(code)
             } else {
                 const error = new Error(lastErrorMsg)
                 error.spawnCode = code
@@ -28,7 +29,6 @@ export const spawn = (cmd, options = {}) =>
         })
 
         process.on('error', err => {
-            log(err.message)
             reject(err)
         })
     })
