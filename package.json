@@ -1,0 +1,32 @@
+{
+    "name": "docker-vacuum",
+    "version": "0.0.0",
+    "description": "Cleanup Docker resources - documentation project",
+    "scripts": {
+      "book:serve": "node_modules/.bin/gitbook serve",
+      "book:build": "node_modules/.bin/gitbook build . docs",
+      "book:install": "node_modules/.bin/gitbook install"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/marcopeg/docker-vacuum.git"
+    },
+    "author": "Marco Pegoraro",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/marcopeg/docker-vacuum/issues"
+    },
+    "homepage": "https://marcopeg.github.io/docker-vacuum/",
+    "keywords": [
+      "gatsby",
+      "docker",
+      "deployment",
+      "automation",
+      "pipeline",
+      "triggers"
+    ],
+    "devDependencies": {
+      "gitbook-cli": "^2.3.2"
+    }
+  }
+  
