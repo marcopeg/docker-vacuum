@@ -13,6 +13,8 @@ tag?=${organization}/${name}
 
 # Mish
 loglevel?=debug
+vacuumInterval?=5000
+vacuumRules?="[{\"match\":\"(.*)\",\"retain\":2},{\"match\":\"hello-world\",\"retain\":0}]"
 
 # Build the project using cache
 image:
@@ -25,6 +27,9 @@ run:
 		--rm \
 		--name ${name} \
 		-e LOG_LEVEL=${loglevel} \
+		-e VACUUM_INTERVAL=${vacuumInterval} \
+		-e VACUUM_RULES=${vacuumRules} \
+		-v /var/run/docker.sock:/var/run/docker.sock \
 		${tag}
 
 stop:
@@ -32,23 +37,6 @@ stop:
 
 remove:
 	docker rm ${name}
-
-# Like start, but in background
-# classic way to launch it on a server
-boot:
-	docker run \
-		-d \
-		--name ${name} \
-		${name}
-
-down: stop remove
-
-# Gain access to a running container
-ssh:
-	docker exec \
-		-it \
-		${name} \
-		/bin/sh
 
 publish:
 	docker tag ${tag}:${version} ${tag}:${version}

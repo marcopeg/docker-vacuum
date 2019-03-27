@@ -1,14 +1,7 @@
-import path from 'path'
+import { registerAction, createHookApp, logBoot } from '@marcopeg/hooks'
+import { SETTINGS, FINISH } from '@marcopeg/hooks'
 import * as config from '@marcopeg/utils/lib/config'
-import { logInfo, logVerbose } from 'services/logger'
-import {
-    createHook,
-    registerAction,
-    createHookApp,
-    logBoot,
-    SETTINGS,
-    FINISH,
-} from '@marcopeg/hooks'
+import { logError, logVerbose } from 'services/logger'
 
 const services = [
     require('./services/env'),
@@ -23,25 +16,20 @@ registerAction({
     hook: SETTINGS,
     name: '♦ boot',
     handler: async ({ settings }) => {
+
+        // Parse JSON rules
+        let rules = []
+        const rulesSrc = config.get('VACUUM_RULES').replace(/\\"/g, "\"")
+
+        try {
+            rules = JSON.parse(rulesSrc)
+        } catch (err) {
+            throw new Error(`Failed to parse rules`)
+        }
+
         settings.vacuum = {
-            rules: [
-                {
-                    match: 'registry.24hr(.*)',
-                    retain: 1,
-                },
-                {
-                    match: 'mariadb',
-                    retain: 1,
-                },
-                {
-                    match: 'marcopeg/(.*)',
-                    retain: 1,
-                },
-                {
-                    match: 'pigtail(.*)',
-                    retain: 0,
-                }
-            ]
+            interval: Number(config.get('VACUUM_INTERVAL')),
+            rules,
         }
     },
 })

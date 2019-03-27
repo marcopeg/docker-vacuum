@@ -73,24 +73,25 @@ export const getObsoleteImages = (images, rules) => {
     }, [])
 }
 
-export const dockerImageRetain = async (rules) => {
-    const images = await dockerImages()
+export const dockerImageRetain = async (rules, keep = []) => {
+    const images = (await dockerImages())
+        .filter(image => !keep.includes(image.uuid))
+
     const obsolete = getObsoleteImages(images, rules)
 
     const res = {
         deleted: [],
         errors: [],
     }
+
     for (const image of obsolete) {
         try {
-            logVerbose(`Deleting: ${image.repository}:${image.tag} - ${image.uuid}`)   
             const output = await dockerRmi(image.uuid)
             res.deleted.push({
                 ...image,
                 output,
             })
         } catch (error) {
-            logError(`Failed to delete ${image.repository}:${image.tag} (${image.uuid}) - ${error.message}`)
             res.errors.push({
                 ...image,
                 error,
