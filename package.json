@@ -1,32 +1,58 @@
 {
-    "name": "docker-vacuum",
-    "version": "0.0.0",
-    "description": "Cleanup Docker resources - documentation project",
-    "scripts": {
-      "book:serve": "node_modules/.bin/gitbook serve",
-      "book:build": "node_modules/.bin/gitbook build . docs",
-      "book:install": "node_modules/.bin/gitbook install"
-    },
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/marcopeg/docker-vacuum.git"
-    },
-    "author": "Marco Pegoraro",
-    "license": "MIT",
-    "bugs": {
-      "url": "https://github.com/marcopeg/docker-vacuum/issues"
-    },
-    "homepage": "https://marcopeg.github.io/docker-vacuum/",
-    "keywords": [
-      "gatsby",
-      "docker",
-      "deployment",
-      "automation",
-      "pipeline",
-      "triggers"
-    ],
-    "devDependencies": {
-      "gitbook-cli": "^2.3.2"
-    }
-  }
-  
+  "name": "docker-vacuum",
+  "version": "0.0.0",
+  "description": "Docker cleanup service",
+  "private": true,
+  "scripts": {
+    "start": "NODE_ENV=development ./node_modules/.bin/nodemon --watch ssr -e js index.dev.js",
+    "start:prod": "NODE_ENV=production BABEL_ENV=node npm run clean && npm run build && node index",
+    "clean": "rm -rf ./build-ssr",
+    "build": "NODE_ENV=production BABEL_ENV=node ./node_modules/.bin/babel ssr --out-dir ./build-ssr",
+    "test": "./node_modules/.bin/jest --watch",
+    "lint": "./node_modules/.bin/eslint .",
+    "book:serve": "node_modules/.bin/gitbook serve",
+    "book:build": "node_modules/.bin/gitbook build . docs",
+    "book:install": "node_modules/.bin/gitbook install"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "dependencies": {
+    "@babel/core": "^7.3.3",
+    "@babel/polyfill": "^7.0.0",
+    "@marcopeg/hooks": "^0.2.2",
+    "@marcopeg/utils": "^1.12.0",
+    "bytes": "^3.1.0",
+    "moment": "^2.24.0",
+    "node-env-file": "^0.1.8"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "babel-plugin-dynamic-import-node-babel-7": "^2.0.7",
+    "babel-plugin-module-resolver": "^3.1.1",
+    "eslint-config-react": "^1.1.7",
+    "jest": "^24.5.0",
+    "nodemon": "^1.18.9",
+    "gitbook-cli": "^2.3.2"
+  },
+  "keywords": [
+    "docker",
+    "cleanup",
+    "utility",
+    "planner",
+    "cron"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcopeg/docker-vacuum.git"
+  },
+  "author": "Marco Pegoraro",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/marcopeg/docker-vacuum/issues"
+  },
+  "homepage": "https://marcopeg.github.io/docker-vacuum/"
+}

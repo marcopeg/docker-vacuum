@@ -1,38 +1,47 @@
-
 #
-# Releases the production images to DockerHUB
-#
-release:
-	(cd services/gatsby-deploy && make release)
-
-
-
-#
-# Development
+# Simple interface to run Docker!
 #
 
-dev:
-	HUMBLE_ENV=dev humble build
-	HUMBLE_ENV=dev humble up -d
-	HUMBLE_ENV=dev humble logs -f
 
-undev:
-	HUMBLE_ENV=dev humble down
+# Running container's name
+organization?=marcopeg
+name:=$(shell node -p "require('./package.json').name")
+version:= $(shell node -p "require('./package.json').version")
 
+# Docker image tag name
+tag?=${organization}/${name}
 
+# Mish
+loglevel?=debug
+vacuumInterval?=5000
+vacuumRules?="[{\"match\":\"(.*)\",\"retain\":2},{\"match\":\"hello-world\",\"retain\":0}]"
 
-#
-# Production Commands
-#
+# Build the project using cache
+image:
+	docker build -t ${tag} -t ${tag}:${version} .
+	
+# Spins up a container from the latest available image
+# this is useful to test locally
+run:
+	docker run \
+		--rm \
+		--name ${name} \
+		-e LOG_LEVEL=${loglevel} \
+		-e VACUUM_INTERVAL=${vacuumInterval} \
+		-e VACUUM_RULES=${vacuumRules} \
+		-v /var/run/docker.sock:/var/run/docker.sock \
+		${tag}
 
-build-prod:
-	HUMBLE_ENV=prod humble build --no-cache
+stop:
+	docker stop ${name}
 
-prod:
-	HUMBLE_ENV=prod humble build
-	HUMBLE_ENV=prod humble up -d
-	HUMBLE_ENV=prod humble logs -f
+remove:
+	docker rm ${name}
 
-unprod:
-	HUMBLE_ENV=prod humble down
+publish:
+	docker tag ${tag}:${version} ${tag}:${version}
+	docker tag ${tag}:${version} ${tag}:latest
+	docker push ${tag}:${version}
+	docker push ${tag}:latest
 
+release: image publish
