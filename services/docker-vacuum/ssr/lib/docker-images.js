@@ -24,7 +24,10 @@ export const parseLine = (line) => {
 }
 
 export const parseResponse = (res) => {
-    const lines = res.trim().split('\n')
+    const lines = res
+        .trim()
+        .split('\n')
+        .filter(line => line.trim())
     return lines.map(parseLine)
 }
 

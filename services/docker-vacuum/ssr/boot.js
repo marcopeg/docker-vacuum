@@ -34,8 +34,12 @@ registerAction({
                     retain: 1,
                 },
                 {
-                    match: 'marcopeg/gatsby-deploy',
-                    retain: 2,
+                    match: 'marcopeg/(.*)',
+                    retain: 1,
+                },
+                {
+                    match: 'pigtail(.*)',
+                    retain: 0,
                 }
             ]
         }
