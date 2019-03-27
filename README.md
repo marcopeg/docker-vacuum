@@ -33,3 +33,7 @@ and a `retain` amount that is the number of most recent tags to keep on the disk
 
 > By default Docker Vacuum try to cleanup everything, keeping the last 2 versions.
 
+## Collaborations
+
+Please feel free to open Pull Requests
+
