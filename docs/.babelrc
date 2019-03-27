@@ -1,0 +1,10 @@
+{
+    "presets": [
+        "@babel/preset-env",
+        "@babel/preset-react"
+    ],
+    "plugins": [
+        [ "module-resolver", { "root": ["ssr"] } ],
+        "babel-plugin-dynamic-import-node-babel-7"
+    ]
+}
