@@ -25,12 +25,13 @@ const env = envalid.cleanEnv(process.env, {
       'silly',
     ],
   }),
+  VACUUM_DELAY: envalid.num({ default: 600000 }),
   VACUUM_INTERVAL: envalid.num({ default: 600000 }),
   VACUUM_RULES: envalid.json({
     default: '[{ "match": "(.*)", "retain": 2 }]',
   }),
-  VACUUM_SYSTEM_PRUNE: envalid.bool({ default: true }),
-  VACUUM_SYSTEM_PRUNE_VOLUMES: envalid.bool({ default: true }),
+  VACUUM_SYSTEM_PRUNE: envalid.bool({ default: false }),
+  VACUUM_SYSTEM_PRUNE_VOLUMES: envalid.bool({ default: false }),
 });
 
 runHookApp({
@@ -39,6 +40,7 @@ runHookApp({
       level: env.LOG_LEVEL,
     },
     vacuum: {
+      delay: env.VACUUM_DELAY,
       interval: env.VACUUM_INTERVAL,
       rules: env.VACUUM_RULES,
       prune: {

@@ -14,8 +14,9 @@ tag?=${organization}/${name}
 # Mish
 nodeEnv?=development
 loglevel?=info
-vacuumInterval?=5000
-vacuumRules?="[{\"match\":\"(.*)\",\"retain\":2},{\"match\":\"hello-world\",\"retain\":0}]"
+vacuumDelay?=1000
+vacuumInterval?=10000
+vacuumRules?="[{\"match\":\"(.*)\",\"retain\":1},{\"match\":\"hello-world\",\"retain\":0}]"
 
 # Build the project using cache
 image:
@@ -29,8 +30,9 @@ run:
 		--name ${name} \
 		-e NODE_ENV=${nodeEnv} \
 		-e LOG_LEVEL=${loglevel} \
-		-e VACUUM_INTERVAL=${vacuumInterval} \
 		-e VACUUM_RULES=${vacuumRules} \
+		-e VACUUM_DELAY=${vacuumDelay} \
+		-e VACUUM_INTERVAL=${vacuumInterval} \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		${tag}
 

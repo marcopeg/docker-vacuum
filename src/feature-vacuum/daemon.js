@@ -9,10 +9,16 @@ const loop = async (...args) => {
     { interval = 600000, rules = [], isPruneEnabled, pruneVolumes },
     { log },
   ] = args;
+
   const next = () => {
     log.info(`next loop in ${prettyMs(interval)}`);
     setTimeout(() => loop(...args), interval);
   };
+
+  log.info(`run docker-vacuum`, {
+    rules,
+    interval,
+  });
 
   try {
     // delete dangling images
