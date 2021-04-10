@@ -1,4 +1,4 @@
-# DockerVacuum
+# Docker Vacuum
 
 DockerVacuum is a utility container that will help keep a clean Docker in your
 production server or development machine.
