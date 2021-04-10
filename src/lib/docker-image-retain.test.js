@@ -11,7 +11,7 @@ const { rules1, matches1 } = require('./docker-image-retain.fixture');
 
 // This is to recycle the fake data
 const { parseResponse } = require('./docker-images');
-const { r1, r3 } = require('./docker-images.fixture');
+const { r1, r3, r4 } = require('./docker-images.fixture');
 
 describe('lib/docker-image-retain', () => {
   test('it should find single images as list', () => {
@@ -59,6 +59,19 @@ describe('lib/docker-image-retain', () => {
   test('it should work even without images!', () => {
     const obsolete = getObsoleteImages(parseResponse(``), rules1);
     expect(obsolete).toEqual([]);
+  });
+
+  test('it should retain on r4', () => {
+    const images = parseResponse(r4);
+    const obsoleteImages = getObsoleteImages(images, [
+      {
+        match: 'img-captain-(.*)',
+        retain: 2,
+      },
+    ]);
+    // console.log(images.map((_) => `${_.repository}:${_.tag}@${_.uuid}`));
+    // console.log(obsoleteImages);
+    // console.log(obsoleteImages.length);
   });
 
   test.skip('it should apply retentions rules on real docker stuff', async () => {

@@ -1,5 +1,5 @@
 const { parseResponse, parseLine } = require('./docker-images');
-const { r1, r2 } = require('./docker-images.fixture');
+const { r1, r2, r4 } = require('./docker-images.fixture');
 
 describe('lib/docker-images', () => {
   test('parseResponse should parse lines', async () => {
@@ -11,5 +11,9 @@ describe('lib/docker-images', () => {
     const res = parseLine(r2);
     expect(res.uuid).toBe('6a23819b932c');
     expect(res.size.string).toBe('895MB');
+  });
+
+  test('should parse r4', () => {
+    const res = parseResponse(r4);
   });
 });
