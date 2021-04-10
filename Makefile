@@ -12,7 +12,8 @@ version:= $(shell node -p "require('./package.json').version")
 tag?=${organization}/${name}
 
 # Mish
-loglevel?=debug
+nodeEnv?=development
+loglevel?=info
 vacuumInterval?=5000
 vacuumRules?="[{\"match\":\"(.*)\",\"retain\":2},{\"match\":\"hello-world\",\"retain\":0}]"
 
@@ -26,6 +27,7 @@ run:
 	docker run \
 		--rm \
 		--name ${name} \
+		-e NODE_ENV=${nodeEnv} \
 		-e LOG_LEVEL=${loglevel} \
 		-e VACUUM_INTERVAL=${vacuumInterval} \
 		-e VACUUM_RULES=${vacuumRules} \

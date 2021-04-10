@@ -18,26 +18,11 @@ FROM node:11.11-alpine AS builder
 # NPM Install for building
 WORKDIR /usr/src/app-build
 ADD package.json /usr/src/app-build/package.json
-RUN yarn install --production=false
+ADD package-lock.json /usr/src/app-build/package-lock.json
+RUN npm install --only=production
 
-# NPM Install for production
-WORKDIR /usr/src/app-run
-ADD package.json /usr/src/app-run/package.json
-RUN cp /usr/src/app-build/yarn.lock ./
-RUN yarn install --production=true
-
-# Copy source files:
-WORKDIR /usr/src/app-build
-ADD index.js /usr/src/app-build
-ADD .babelrc /usr/src/app-build
-ADD .env /usr/src/app-build/.env
-ADD .eslintrc /usr/src/app-build/.eslintrc
-ADD .eslintignore /usr/src/app-build/.eslintignore
-
-# Build backend
-WORKDIR /usr/src/app-build
-ADD ssr /usr/src/app-build/ssr
-RUN npm run build
+# Remove dev dependencies
+RUN npm prune --production
 
 
 #
@@ -54,10 +39,8 @@ FROM node:11.11-alpine AS runner
 
 # Copy assets for build:
 WORKDIR /usr/src/app
-COPY --from=builder /usr/src/app-run/node_modules ./node_modules
-COPY --from=builder /usr/src/app-build/build-ssr ./build-ssr
-ADD package.json /usr/src/app
-ADD index.js /usr/src/app
+COPY --from=builder /usr/src/app-build/node_modules ./node_modules
+ADD src /usr/src/app/src
 
 
 
@@ -68,7 +51,6 @@ ADD index.js /usr/src/app
 
 #
 # Install Docker to get the logs out of the shit
-# -- This is needed only for MacOSX pourpose --
 #
 
 RUN apk add --no-cache \
@@ -81,7 +63,7 @@ RUN apk add --no-cache \
 RUN [ ! -e /etc/nsswitch.conf ] && echo 'hosts: files dns' > /etc/nsswitch.conf
 
 ENV DOCKER_CHANNEL stable
-ENV DOCKER_VERSION 18.09.1
+ENV DOCKER_VERSION 19.03.15
 # TODO ENV DOCKER_SHA256
 # https://github.com/docker/docker-ce/blob/5b073ee2cf564edee5adca05eee574142f7627bb/components/packaging/static/hash_files !!
 # (no SHA file artifacts on download.docker.com yet as of 2017-06-07 though)
@@ -122,10 +104,12 @@ RUN set -eux; \
 # ==========================================
 #
 
-# Default environment configuration:
-ENV NODE_ENV development
-ENV LOG_LEVEL error
+# Default Environment
+ENV NODE_ENV production
+ENV LOG_LEVEL info
 ENV VACUUM_INTERVAL 600000
 ENV VACUUM_RULES "[{\"match\":\"(.*)\",\"retain\":2}]"
 
-ENTRYPOINT [ "node", "index.js" ]
+WORKDIR /usr/src/app
+CMD node src/boot.js
+
