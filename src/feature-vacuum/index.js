@@ -15,6 +15,14 @@ module.exports = ({ registerAction }) => {
       const isPruneEnabled = getConfig('vacuum.prune.enabled');
       const pruneVolumes = getConfig('vacuum.prune.volumes');
 
+      log.info(`docker-vacuum config`, {
+        rules,
+        delay,
+        interval,
+        isPruneEnabled,
+        pruneVolumes,
+      });
+
       log.info(`Starting docker-vacuum in ${prettyMs(delay)}`);
       setTimeout(
         () => start({ interval, rules, isPruneEnabled, pruneVolumes }, { log }),

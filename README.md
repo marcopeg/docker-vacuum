@@ -12,7 +12,7 @@ docker run --rm \
 -e VACUUM_RULES="[{\"match\":\"(.*)\",\"retain\":1}]" \
 -e VACUUM_DELAY=1000 \
 -v /var/run/docker.sock:/var/run/docker.sock \
-marcopeg/docker-vacuum:0.2.0
+marcopeg/docker-vacuum
 ```
 
 ## Settings

@@ -1,5 +1,9 @@
 # DockerVacuum Changelog
 
+## 0.4.0
+
+- improve logging
+
 ## 0.2.0
 
 - add start delay `VACUUM_DELAY`

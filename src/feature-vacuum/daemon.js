@@ -37,7 +37,7 @@ const loop = async (...args) => {
       rules,
       busyImages,
     );
-    log.verbose('remove obsolete images', { state });
+    log.verbose('remove obsolete images (full state)', { state });
     log.info('remove obsolete images', { deletedImages });
     errors.length && log.warn('some images were not removed', { errors });
   } catch (err) {
